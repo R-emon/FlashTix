@@ -3,7 +3,7 @@ spring:
     name: flashtix-api
 
   datasource:
-    url: jdbc:mysql://localhost:3306/flashtix_db?allowPublicKeyRetrieval=true&useSSL=false
+    url: jdbc:mysql://localhost:3307/flashtix_db?allowPublicKeyRetrieval=true&useSSL=false
     username: root
     password: admin7576
     driver-class-name: com.mysql.cj.jdbc.Driver
