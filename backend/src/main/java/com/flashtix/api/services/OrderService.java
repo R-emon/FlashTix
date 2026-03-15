@@ -1,6 +1,7 @@
 package com.flashtix.api.services;
 
 import com.flashtix.api.models.dto.OrderRequest;
+import com.flashtix.api.models.dto.OrderResponse;
 import com.flashtix.api.models.entities.Order;
 import com.flashtix.api.models.entities.Ticket;
 import com.flashtix.api.models.entities.User;
@@ -27,7 +28,7 @@ public class OrderService {
     private final RedisLockService redisLockService;
 
     @Transactional
-    public Order createOrder(OrderRequest request, String userEmail) {
+    public OrderResponse createOrder(OrderRequest request, String userEmail) {
 
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -74,6 +75,18 @@ public class OrderService {
         }
         ticketRepository.saveAll(ticketsToPurchase);
 
-        return savedOrder;
+        List<String> seatNames = new ArrayList<>();
+        for (Ticket t : ticketsToPurchase) {
+            seatNames.add(t.getSeatIdentifier());
+        }
+        return com.flashtix.api.models.dto.OrderResponse.builder()
+                .orderId(savedOrder.getId())
+                .userEmail(user.getEmail())
+                .totalAmount(savedOrder.getTotalAmount())
+                .status(savedOrder.getStatus())
+                .paymentIntentId(savedOrder.getPaymentIntentId())
+                .createdAt(savedOrder.getCreatedAt())
+                .seatIdentifiers(seatNames)
+                .build();
     }
 }

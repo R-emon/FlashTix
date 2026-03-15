@@ -16,9 +16,10 @@ public class RedisLockService {
     public boolean lockTicket(Long ticketId, Long userId) {
         String key = "ticket:lock:" + ticketId;
 
-        // setIfAbsent is equivalent to SETNX in Redis. It only writes if the key doesn't exist.
+        // setIfAbsent is equivalent to SETNX in Redis. It only writes if the key
+        // doesn't exist.
         Boolean success = redisTemplate.opsForValue()
-                .setIfAbsent(key, userId, Duration.ofMinutes(15));
+                .setIfAbsent(key, String.valueOf(userId), Duration.ofMinutes(15));
 
         return Boolean.TRUE.equals(success);
     }
