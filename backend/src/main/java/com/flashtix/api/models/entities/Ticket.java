@@ -25,10 +25,14 @@ public class Ticket {
     @JoinColumn(name = "event_id", nullable = false)
     private Event event;
 
-    // nullable = true because a ticket may not be owned by anyone yet
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    // We must link the Ticket to the Order it was purchased in!
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
+    private Order order;
 
     @Column(nullable = false)
     private String seatIdentifier; // e.g. "Row A - Seat 12"
