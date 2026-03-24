@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Builder
 public class EventResponse {
     private Long id;
-    private String venueName; // We only expose the name, not the whole Venue entity
+    private VenueResponse venue;
     private String title;
     private String description;
     private LocalDateTime startTime;

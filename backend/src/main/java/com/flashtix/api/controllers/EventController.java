@@ -2,6 +2,7 @@ package com.flashtix.api.controllers;
 
 import com.flashtix.api.models.dto.EventRequest;
 import com.flashtix.api.models.dto.EventResponse;
+import com.flashtix.api.models.dto.VenueResponse;
 import com.flashtix.api.models.entities.Event;
 import com.flashtix.api.services.EventService;
 import jakarta.validation.Valid;
@@ -21,7 +22,6 @@ public class EventController {
 
     private final EventService eventService;
 
-    // Public endpoint
     @GetMapping
     public ResponseEntity<List<EventResponse>> getAllEvents() {
         List<EventResponse> responses = eventService.getAllEvents().stream()
@@ -30,13 +30,11 @@ public class EventController {
         return ResponseEntity.ok(responses);
     }
 
-    // Public endpoint
     @GetMapping("/{id}")
     public ResponseEntity<EventResponse> getEventById(@PathVariable Long id) {
         return ResponseEntity.ok(mapToResponse(eventService.getEventById(id)));
     }
 
-    // Admin only endpoint
     @PostMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<EventResponse> createEvent(@Valid @RequestBody EventRequest request) {
@@ -46,9 +44,19 @@ public class EventController {
 
     // Helper method to convert an internal Entity to our safe Response DTO
     private EventResponse mapToResponse(Event event) {
+
+        // 1. Build the nested Venue DTO
+        VenueResponse venueDto = VenueResponse.builder()
+                .id(event.getVenue().getId())
+                .name(event.getVenue().getName())
+                .address(event.getVenue().getAddress())
+                .capacity(event.getVenue().getCapacity())
+                .build();
+
+        // 2. Build the Event DTO and inject the Venue DTO
         return EventResponse.builder()
                 .id(event.getId())
-                .venueName(event.getVenue().getName()) // WE ONLY EXPOSE THE VENUE NAME!
+                .venue(venueDto)
                 .title(event.getTitle())
                 .description(event.getDescription())
                 .startTime(event.getStartTime())
