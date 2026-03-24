@@ -5,12 +5,10 @@ services:
     image: mysql:8.0
     container_name: flashtix_mysql
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_ROOT_PASSWORD: admin7576
       MYSQL_DATABASE: flashtix_db
-      MYSQL_USER: root
-      MYSQL_PASSWORD: admin7576
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
