@@ -30,7 +30,7 @@ public class EventService {
                 .orElseThrow(() -> new RuntimeException("Event not found with id: " + id));
     }
 
-    // @Transactional ensures that if ticket generation fails, the entire event creation rolls back!
+    // if ticket generation fails, the entire event creation rolls back!
     @Transactional
     public Event createEvent(EventRequest request) {
 

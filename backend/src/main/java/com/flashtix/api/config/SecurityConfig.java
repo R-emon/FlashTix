@@ -35,10 +35,8 @@ public class SecurityConfig {
                         // Secure endpoints
                         .anyRequest().authenticated()
                 )
-                // We use JWT, so we don't need HTTP sessions built by Spring
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        // Insert our custom JWT filter BEFORE the standard Spring Security username/password filter
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

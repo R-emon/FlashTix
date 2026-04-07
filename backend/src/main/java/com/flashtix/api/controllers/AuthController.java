@@ -67,7 +67,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
 
-        // 1. Let Spring Security attempt the login with email and raw password
+        // 1. Spring Security attempt the login with email and raw password
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );

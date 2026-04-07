@@ -20,7 +20,7 @@ public class GlobalExceptionHandler {
     // Handle generic Exceptions
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGlobalException(Exception ex) {
-        
+
         logger.error("Unhandled Exception occurred: ", ex);
         Map<String, Object> errorDetails = new HashMap<>();
         errorDetails.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
