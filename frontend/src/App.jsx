@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './views/Home';
 import Login from './views/Login'
+import EventDetails from './views/EventDetails';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/event/:id" element={<EventDetails />} />
         </Routes>
       </div>
     </Router>

@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { motion } from 'framer-motion'; 
+import { Link } from 'react-router-dom';
 
 export default function Home() {
   const { data: events, isLoading, isError } = useQuery({
@@ -45,7 +46,9 @@ export default function Home() {
                 <h3 className="text-2xl font-bold text-white">{event.title}</h3>
                 <p className="mt-2 text-sm font-medium text-gray-400">📍 {event.venue.name}</p>
                 <div className="mt-6 flex items-center justify-between pt-4">
-                  <button className="rounded-full bg-white px-6 py-2.5 text-sm font-bold text-brand-dark transition hover:scale-105 hover:bg-gray-200 active:scale-95">Grab Ticket</button>
+                    <Link to={`/event/${event.id}`} className="rounded-full bg-white px-6 py-2.5 text-sm font-bold text-brand-dark transition hover:scale-105 hover:bg-gray-200 active:scale-95">
+                        View Details
+                    </Link>
                 </div>
               </div>
             </motion.div>
