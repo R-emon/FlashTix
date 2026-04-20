@@ -18,15 +18,16 @@ export default function Login() {
     setError('');
     
     try {
-      // Make the login request to the Java backend
-      // NOTE: Ensure '/auth/login' exactly matches your Spring Boot security endpoint!
+      
       const response = await api.post('/auth/login', { email, password });
       
-      // We expect Spring Boot to return JSON with a JWT token and user details
-      const { token, user } = response.data;
       
-      // Save it to Zustand global state!
-      setLogin(user, token);
+      const { token, email: userEmail, firstName, lastName, role } = response.data;
+
+      const userObj = { email: userEmail, firstName, lastName, role };
+      
+      // Saveto Zustand global state!
+      setLogin(userObj, token);
       
       // Redirect back to the Home page
       navigate('/'); 
