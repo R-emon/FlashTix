@@ -1,6 +1,7 @@
 package com.flashtix.api.services;
 
 import com.flashtix.api.models.dto.EventRequest;
+import com.flashtix.api.models.dto.TicketResponse;
 import com.flashtix.api.models.entities.Event;
 import com.flashtix.api.models.entities.Ticket;
 import com.flashtix.api.models.entities.Venue;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -70,5 +72,20 @@ public class EventService {
         ticketRepository.saveAll(tickets);
 
         return savedEvent;
+    }
+
+    public List<TicketResponse> getTicketsForEvent(Long eventId) {
+        // 1. Fetch tickets directly from MySQL for this event
+        List<Ticket> tickets = ticketRepository.findByEventId(eventId);
+
+        // 2. Map them securely to our new DTO
+        return tickets.stream().map(ticket ->
+                TicketResponse.builder()
+                        .id(ticket.getId())
+                        .seatIdentifier(ticket.getSeatIdentifier())
+                        .price(ticket.getPrice())
+                        .status(ticket.getStatus())
+                        .build()
+        ).collect(Collectors.toList());
     }
 }

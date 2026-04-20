@@ -17,7 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity // Allows us to use @PreAuthorize("hasRole('ADMIN')") on our controllers later
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -31,7 +31,7 @@ public class SecurityConfig {
                         // Public endpoints
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers("/api/v1/venues").permitAll() // Anyone can view venues
-                        .requestMatchers("/api/v1/events").permitAll() // Anyone can view events
+                        .requestMatchers("/api/v1/events/**").permitAll() // Anyone can view events
                         // Secure endpoints
                         .anyRequest().authenticated()
                 )

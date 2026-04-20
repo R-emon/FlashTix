@@ -14,4 +14,6 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     // Custom query to find all available tickets for a specific event
     @Query("SELECT t FROM Ticket t WHERE t.event.id = :eventId AND t.status = 'AVAILABLE'")
     List<Ticket> findAvailableTicketsByEventId(@Param("eventId") Long eventId);
+
+    List<Ticket> findByEventId(Long eventId);
 }

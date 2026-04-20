@@ -2,6 +2,7 @@ package com.flashtix.api.controllers;
 
 import com.flashtix.api.models.dto.EventRequest;
 import com.flashtix.api.models.dto.EventResponse;
+import com.flashtix.api.models.dto.TicketResponse;
 import com.flashtix.api.models.dto.VenueResponse;
 import com.flashtix.api.models.entities.Event;
 import com.flashtix.api.services.EventService;
@@ -65,5 +66,10 @@ public class EventController {
                 .availableTickets(event.getAvailableTickets())
                 .status(event.getStatus())
                 .build();
+    }
+
+    @GetMapping("/{id}/tickets")
+    public ResponseEntity<List<TicketResponse>> getEventTickets(@PathVariable Long id) {
+        return ResponseEntity.ok(eventService.getTicketsForEvent(id));
     }
 }
