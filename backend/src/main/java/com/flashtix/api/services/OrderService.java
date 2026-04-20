@@ -2,13 +2,16 @@ package com.flashtix.api.services;
 
 import com.flashtix.api.models.dto.OrderRequest;
 import com.flashtix.api.models.dto.OrderResponse;
+import com.flashtix.api.models.entities.Event;
 import com.flashtix.api.models.entities.Order;
 import com.flashtix.api.models.entities.Ticket;
 import com.flashtix.api.models.entities.User;
+import com.flashtix.api.repositories.EventRepository;
 import com.flashtix.api.repositories.OrderRepository;
 import com.flashtix.api.repositories.TicketRepository;
 import com.flashtix.api.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +28,9 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final TicketRepository ticketRepository;
     private final UserRepository userRepository;
+    private final EventRepository eventRepository;
     private final RedisLockService redisLockService;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     @Transactional
     public OrderResponse createOrder(OrderRequest request, String userEmail) {
@@ -75,10 +80,19 @@ public class OrderService {
         }
         ticketRepository.saveAll(ticketsToPurchase);
 
+        Event event = ticketsToPurchase.getFirst().getEvent();
+        event.setAvailableTickets(event.getAvailableTickets() - ticketsToPurchase.size());
+        eventRepository.save(event);
+
+        redisTemplate.delete("events:all");
+        redisTemplate.delete("event:" + event.getId());
+
         List<String> seatNames = new ArrayList<>();
         for (Ticket t : ticketsToPurchase) {
             seatNames.add(t.getSeatIdentifier());
         }
+
+
         return com.flashtix.api.models.dto.OrderResponse.builder()
                 .orderId(savedOrder.getId())
                 .userEmail(user.getEmail())
